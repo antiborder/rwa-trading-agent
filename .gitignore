@@ -12,30 +12,18 @@ ENV/
 *.egg-info/
 
 # Lambda deployment dependencies (installed via pip install -t .)
-# Exclude everything in backend/ except app/ and requirements.txt
-backend/*
+backend/*.dist-info/
+backend/*/
 !backend/app/
 !backend/requirements.txt
-backend/app/**/*.pyc
-backend/app/**/__pycache__/
-
-# Exclude everything in lambda/ except utils/, config.py, main.py, requirements.txt
-lambda/*
+!backend/__init__.py
+lambda/*.dist-info/
+lambda/*/
 !lambda/utils/
 !lambda/config.py
 !lambda/main.py
 !lambda/requirements.txt
-lambda/utils/**/*.pyc
-lambda/utils/**/__pycache__/
-
-# Exclude specific installed files
-backend/six.py
-backend/typing_extensions.py
-lambda/six.py
-lambda/typing_extensions.py
-lambda/*.pth
-lambda/distutils-precedence.pth
-lambda/google_auth_httplib2.py
+!lambda/__init__.py
 
 # Environment variables
 .env
@@ -82,6 +70,7 @@ yarn.lock
 # Build
 dist/
 build/
+*.egg-info/
 
 # Logs
 *.log
@@ -101,7 +90,3 @@ aws-exports.js
 *.bak
 *.backup
 
-# Terraform plan files
-*.tfplan
-tfplan
-infrastructure/terraform/tfplan

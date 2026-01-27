@@ -2,10 +2,11 @@
 import json
 import os
 from typing import Dict
-from dotenv import load_dotenv
 
-# 環境変数の読み込み
-load_dotenv()
+# 環境変数の読み込み（ローカル開発環境のみ）
+# Lambda環境では環境変数が直接設定されているため不要
+# 注意: Lambda環境では dotenv を使用しない（環境変数が直接設定されている）
+# ローカル開発時は、環境変数を直接設定するか、.envファイルを手動で読み込む
 
 from config import MIN_CONFIDENCE_SCORE, TRADING_SYMBOLS
 from utils.logger import logger

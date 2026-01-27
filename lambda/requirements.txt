@@ -1,8 +1,9 @@
-boto3>=1.34.0
-ccxt>=4.2.0
-google-generativeai>=0.3.0
-requests>=2.31.0
-beautifulsoup4>=4.12.0
-lxml>=5.1.0
-python-dotenv>=1.0.0
+# boto3>=1.34.0  # Lambda環境では既に利用可能
+# 以下の依存関係はLambda Layerに移動
+# ccxt>=4.2.0
+# google-generativeai>=0.3.0
+# requests>=2.31.0
+# beautifulsoup4>=4.12.0
+# lxml>=5.1.0
+# python-dotenv>=1.0.0  # Lambda環境では不要（環境変数が直接設定されている）
 

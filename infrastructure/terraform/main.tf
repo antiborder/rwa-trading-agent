@@ -294,6 +294,61 @@ resource "aws_s3_object" "api_lambda" {
   etag       = data.archive_file.api_lambda.output_md5
 }
 
+# Lambda Layer用の依存関係をインストール
+resource "null_resource" "lambda_layer_package" {
+  triggers = {
+    requirements_hash = filesha256("${path.module}/../../lambda-layer/requirements.txt")
+    python_version = "3.13"
+    runtime_version = "python3.13"
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      cd ${path.module}/../../lambda-layer
+      # クリーンアップ
+      rm -rf python/*.dist-info python/__pycache__ python/*/__pycache__
+      find python -type d -name "*.dist-info" -exec rm -rf {} + 2>/dev/null || true
+      find python -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+      # Lambda Layer用のLinux互換パッケージをインストール
+      python3 -m pip install -r requirements.txt -t python --upgrade \
+        --platform manylinux2014_x86_64 \
+        --only-binary=:all: \
+        --python-version 3.13 \
+        --implementation cp \
+        --quiet \
+        --disable-pip-version-check
+    EOT
+  }
+}
+
+# Lambda Layer用のZIPファイル
+data "archive_file" "lambda_layer" {
+  depends_on = [null_resource.lambda_layer_package]
+  type       = "zip"
+  source_dir = "${path.module}/../../lambda-layer"
+  output_path = "${path.module}/lambda-layer.zip"
+  excludes    = ["__pycache__", "*.pyc", "*.log"]
+}
+
+# Lambda Layer用のS3オブジェクト
+resource "aws_s3_object" "lambda_layer" {
+  depends_on = [data.archive_file.lambda_layer]
+  bucket     = aws_s3_bucket.lambda_deployments.id
+  key        = "layer-${data.archive_file.lambda_layer.output_base64sha256}.zip"
+  source     = data.archive_file.lambda_layer.output_path
+  etag       = data.archive_file.lambda_layer.output_md5
+}
+
+# Lambda Layer
+resource "aws_lambda_layer_version" "dependencies" {
+  layer_name          = "${var.table_prefix}-dependencies"
+  s3_bucket           = aws_s3_bucket.lambda_deployments.id
+  s3_key              = aws_s3_object.lambda_layer.key
+  compatible_runtimes = ["python3.13"]
+
+  source_code_hash = data.archive_file.lambda_layer.output_base64sha256
+}
+
 # Lambda関数（メイン実行用）- 依存関係を含むZIPを作成
 resource "null_resource" "trading_agent_lambda_package" {
   triggers = {
@@ -343,6 +398,8 @@ resource "aws_lambda_function" "trading_agent" {
   memory_size     = 512
 
   source_code_hash = data.archive_file.trading_agent_lambda.output_base64sha256
+
+  layers = [aws_lambda_layer_version.dependencies.arn]
 
   environment {
     variables = {
