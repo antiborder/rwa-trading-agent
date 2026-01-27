@@ -1,6 +1,6 @@
 """判断履歴API"""
 from fastapi import APIRouter, HTTPException, Query
-from typing import Optional
+from typing import Optional, List
 from app.models.schemas import JudgmentResponse
 from app.services.dynamodb_service import DynamoDBService
 

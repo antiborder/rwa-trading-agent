@@ -72,32 +72,29 @@ AWS_REGION=ap-northeast-1
 DYNAMODB_TABLE_PREFIX=rwa_trading_agent
 ```
 
-### 2. DynamoDBテーブルの作成
+### 2. Terraformでインフラをデプロイ
 
 ```bash
-cd infrastructure
-python create_tables.py
+cd infrastructure/terraform
+cp terraform.tfvars.example terraform.tfvars
+# terraform.tfvarsを編集してAPIキーを設定
+
+terraform init
+terraform plan
+terraform apply
 ```
 
-### 3. Lambda関数のデプロイ
+これにより、以下が自動的に作成されます：
+- DynamoDBテーブル（5つ）
+- Lambda関数（メイン実行用とAPI用）
+- EventBridgeルール（5分間隔実行）
+- API Gateway
 
-```bash
-cd lambda
-pip install -r requirements.txt -t .
-zip -r ../lambda.zip .
-```
+詳細は `infrastructure/terraform/README.md` を参照してください。
 
-その後、AWS Lambdaコンソールで関数を作成し、`lambda.zip`をアップロードしてください。
+### 3. ローカル開発環境のセットアップ
 
-### 4. EventBridgeルールの設定
-
-AWS EventBridgeコンソールで以下のルールを作成：
-
-- ルール名: `trading-agent-5min-schedule`
-- スケジュール式: `rate(5 minutes)`
-- ターゲット: Lambda関数（上記で作成した関数）
-
-### 5. FastAPI バックエンドの起動
+#### FastAPI バックエンドの起動（ローカル開発用）
 
 ```bash
 cd backend
@@ -105,7 +102,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
-### 6. React フロントエンドの起動
+#### React フロントエンドの起動（ローカル開発用）
 
 ```bash
 cd frontend
@@ -114,6 +111,9 @@ npm run dev
 ```
 
 ブラウザで `http://localhost:3000` を開いてください。
+
+**注意**: ローカル開発時は、バックエンドAPIのURLを`http://localhost:8000`に設定してください。
+本番環境では、Terraformの出力で表示される`api_gateway_url`を使用してください。
 
 ## 開発フェーズ
 

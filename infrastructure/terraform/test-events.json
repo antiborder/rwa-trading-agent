@@ -1,0 +1,104 @@
+{
+  "health": {
+    "version": "2.0",
+    "routeKey": "GET /health",
+    "rawPath": "/health",
+    "rawQueryString": "",
+    "headers": {
+      "accept": "application/json",
+      "content-length": "0",
+      "host": "wh8nizmra9.execute-api.ap-northeast-1.amazonaws.com",
+      "user-agent": "aws-lambda-test",
+      "x-forwarded-for": "127.0.0.1",
+      "x-forwarded-port": "443",
+      "x-forwarded-proto": "https"
+    },
+    "requestContext": {
+      "accountId": "478157933567",
+      "apiId": "wh8nizmra9",
+      "domainName": "wh8nizmra9.execute-api.ap-northeast-1.amazonaws.com",
+      "domainPrefix": "wh8nizmra9",
+      "http": {
+        "method": "GET",
+        "path": "/health",
+        "protocol": "HTTP/1.1",
+        "sourceIp": "127.0.0.1",
+        "userAgent": "aws-lambda-test"
+      },
+      "requestId": "test-request-id",
+      "routeKey": "GET /health",
+      "stage": "$default",
+      "time": "27/Jan/2026:08:00:00 +0000",
+      "timeEpoch": 1706342400000
+    },
+    "isBase64Encoded": false
+  },
+  "root": {
+    "version": "2.0",
+    "routeKey": "GET /",
+    "rawPath": "/",
+    "rawQueryString": "",
+    "headers": {
+      "accept": "application/json",
+      "content-length": "0",
+      "host": "wh8nizmra9.execute-api.ap-northeast-1.amazonaws.com",
+      "user-agent": "aws-lambda-test",
+      "x-forwarded-for": "127.0.0.1",
+      "x-forwarded-port": "443",
+      "x-forwarded-proto": "https"
+    },
+    "requestContext": {
+      "accountId": "478157933567",
+      "apiId": "wh8nizmra9",
+      "domainName": "wh8nizmra9.execute-api.ap-northeast-1.amazonaws.com",
+      "domainPrefix": "wh8nizmra9",
+      "http": {
+        "method": "GET",
+        "path": "/",
+        "protocol": "HTTP/1.1",
+        "sourceIp": "127.0.0.1",
+        "userAgent": "aws-lambda-test"
+      },
+      "requestId": "test-request-id-root",
+      "routeKey": "GET /",
+      "stage": "$default",
+      "time": "27/Jan/2026:08:00:00 +0000",
+      "timeEpoch": 1706342400000
+    },
+    "isBase64Encoded": false
+  },
+  "portfolio_current": {
+    "version": "2.0",
+    "routeKey": "GET /api/portfolio/current",
+    "rawPath": "/api/portfolio/current",
+    "rawQueryString": "",
+    "headers": {
+      "accept": "application/json",
+      "content-length": "0",
+      "host": "wh8nizmra9.execute-api.ap-northeast-1.amazonaws.com",
+      "user-agent": "aws-lambda-test",
+      "x-forwarded-for": "127.0.0.1",
+      "x-forwarded-port": "443",
+      "x-forwarded-proto": "https"
+    },
+    "requestContext": {
+      "accountId": "478157933567",
+      "apiId": "wh8nizmra9",
+      "domainName": "wh8nizmra9.execute-api.ap-northeast-1.amazonaws.com",
+      "domainPrefix": "wh8nizmra9",
+      "http": {
+        "method": "GET",
+        "path": "/api/portfolio/current",
+        "protocol": "HTTP/1.1",
+        "sourceIp": "127.0.0.1",
+        "userAgent": "aws-lambda-test"
+      },
+      "requestId": "test-request-id-portfolio",
+      "routeKey": "GET /api/portfolio/current",
+      "stage": "$default",
+      "time": "27/Jan/2026:08:00:00 +0000",
+      "timeEpoch": 1706342400000
+    },
+    "isBase64Encoded": false
+  }
+}

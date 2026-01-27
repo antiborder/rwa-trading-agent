@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+// 環境変数からAPI URLを取得（本番環境ではAPI Gateway URL、開発環境ではlocalhost）
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
 const api = axios.create({

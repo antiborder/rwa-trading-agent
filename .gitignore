@@ -8,19 +8,67 @@ env/
 venv/
 ENV/
 .venv
+*.dist-info/
+*.egg-info/
+
+# Lambda deployment dependencies (installed via pip install -t .)
+# Exclude everything in backend/ except app/ and requirements.txt
+backend/*
+!backend/app/
+!backend/requirements.txt
+backend/app/**/*.pyc
+backend/app/**/__pycache__/
+
+# Exclude everything in lambda/ except utils/, config.py, main.py, requirements.txt
+lambda/*
+!lambda/utils/
+!lambda/config.py
+!lambda/main.py
+!lambda/requirements.txt
+lambda/utils/**/*.pyc
+lambda/utils/**/__pycache__/
+
+# Exclude specific installed files
+backend/six.py
+backend/typing_extensions.py
+lambda/six.py
+lambda/typing_extensions.py
+lambda/*.pth
+lambda/distutils-precedence.pth
+lambda/google_auth_httplib2.py
 
 # Environment variables
 .env
 .env.local
+.env.*
+frontend/.env
+frontend/.env.local
+*.env
+
+# Terraform
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.*
+terraform/*.tfvars
+terraform/*.tfvars.json
+infrastructure/terraform/.terraform/
+infrastructure/terraform/.terraform.lock.hcl
+infrastructure/terraform/terraform.tfstate
+infrastructure/terraform/terraform.tfstate.*
+infrastructure/terraform/*.tfvars
+infrastructure/terraform/*.tfvars.json
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*.sublime-*
 
 # Lambda
 lambda.zip
+api.zip
 *.zip
 
 # Node
@@ -28,11 +76,12 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+package-lock.json
+yarn.lock
 
 # Build
 dist/
 build/
-*.egg-info/
 
 # Logs
 *.log
@@ -42,3 +91,17 @@ logs/
 .DS_Store
 Thumbs.db
 
+# AWS
+.aws/
+aws-exports.js
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Terraform plan files
+*.tfplan
+tfplan
+infrastructure/terraform/tfplan

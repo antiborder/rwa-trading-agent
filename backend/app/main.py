@@ -1,6 +1,7 @@
 """FastAPI メインアプリケーション"""
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from mangum import Mangum
 from app.config import CORS_ORIGINS
 from app.api import portfolio, judgments, transactions
 
@@ -35,4 +36,8 @@ async def root():
 async def health_check():
     """ヘルスチェック"""
     return {"status": "healthy"}
+
+
+# Lambda用ハンドラー
+handler = Mangum(app)
 
