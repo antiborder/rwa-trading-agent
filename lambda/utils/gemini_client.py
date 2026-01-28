@@ -10,7 +10,7 @@ class GeminiClient:
     
     def __init__(self):
         genai.configure(api_key=GEMINI_API_KEY)
-        self.model = genai.GenerativeModel('gemini-1.5-flash')
+        self.model = genai.GenerativeModel('gemini-3-flash-preview')
     
     def analyze_market(self, news_text: str, price_data: Dict) -> Tuple[int, str]:
         """
@@ -70,14 +70,12 @@ class GeminiClient:
 
 ## 取引対象資産
 - PAXG/USDT (Gold)
-- KAG/USDT (Silver)
+- SLVON/USDT (Silver - iShares Silver Trust Ondo Tokenized)
 - SPYON/USDT (S&P500)
 - QQQON/USDT (NASDAQ)
 - TSLAX/USDT (Tesla)
 - NVDAX/USDT (NVIDIA)
 - MSTRX/USDT (MicroStrategy)
-- EURS/USDT (Euro)
-- GBPT/USDT (Pound)
 - ONDO/USDT (US Treasury)
 - USDT (現金)
 
@@ -89,14 +87,12 @@ class GeminiClient:
 以下のJSON形式で回答してください：
 {{
     "PAXG/USDT": <0.0-1.0の数値>,
-    "KAG/USDT": <0.0-1.0の数値>,
+    "SLVON/USDT": <0.0-1.0の数値>,
     "SPYON/USDT": <0.0-1.0の数値>,
     "QQQON/USDT": <0.0-1.0の数値>,
     "TSLAX/USDT": <0.0-1.0の数値>,
     "NVDAX/USDT": <0.0-1.0の数値>,
     "MSTRX/USDT": <0.0-1.0の数値>,
-    "EURS/USDT": <0.0-1.0の数値>,
-    "GBPT/USDT": <0.0-1.0の数値>,
     "ONDO/USDT": <0.0-1.0の数値>,
     "USDT": <0.0-1.0の数値>
 }}
@@ -163,9 +159,8 @@ class GeminiClient:
         
         # フォールバック: キーと値のペアを抽出
         allocations = {}
-        for symbol in ["PAXG/USDT", "KAG/USDT", "SPYON/USDT", "QQQON/USDT", 
-                       "TSLAX/USDT", "NVDAX/USDT", "MSTRX/USDT", "EURS/USDT",
-                       "GBPT/USDT", "ONDO/USDT", "USDT"]:
+        for symbol in ["PAXG/USDT", "SLVON/USDT", "SPYON/USDT", "QQQON/USDT", 
+                       "TSLAX/USDT", "NVDAX/USDT", "MSTRX/USDT", "ONDO/USDT", "USDT"]:
             pattern = f'"{symbol}":\\s*([\\d.]+)'
             match = re.search(pattern, text)
             if match:

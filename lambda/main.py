@@ -165,6 +165,7 @@ def lambda_handler(event, context):
             )
             
             # 6. リスク管理チェックと実行
+            # [TEST MODE] 取引実行はコメントアウト（テスト中は損失を防ぐため）
             executed_orders = []
             for order in orders:
                 is_valid, message = risk_manager.validate_trade(
@@ -174,25 +175,36 @@ def lambda_handler(event, context):
                 )
                 
                 if is_valid:
-                    logger.info(f"Executing {order['side']} order for {order['symbol']}: {order['amount']}")
-                    result = gateio_client.create_market_order(
-                        order['symbol'],
-                        order['side'],
-                        order['amount']
-                    )
+                    logger.info(f"[TEST MODE] Would execute {order['side']} order for {order['symbol']}: {order['amount']} (TRADE EXECUTION DISABLED)")
+                    # [TEST MODE] 取引実行をコメントアウト
+                    # result = gateio_client.create_market_order(
+                    #     order['symbol'],
+                    #     order['side'],
+                    #     order['amount']
+                    # )
+                    # 
+                    # if result:
+                    #     # 取引履歴を保存
+                    #     dynamodb_client.save_transaction(
+                    #         order['symbol'],
+                    #         order['side'],
+                    #         order['amount'],
+                    #         result.get('price', 0),
+                    #         result.get('status', 'unknown'),
+                    #         current_allocations,
+                    #         target_allocations
+                    #     )
+                    #     executed_orders.append(result)
                     
-                    if result:
-                        # 取引履歴を保存
-                        dynamodb_client.save_transaction(
-                            order['symbol'],
-                            order['side'],
-                            order['amount'],
-                            result.get('price', 0),
-                            result.get('status', 'unknown'),
-                            current_allocations,
-                            target_allocations
-                        )
-                        executed_orders.append(result)
+                    # [TEST MODE] テスト用のダミーデータ
+                    result = {
+                        'symbol': order['symbol'],
+                        'side': order['side'],
+                        'amount': order['amount'],
+                        'price': tickers.get(order['symbol'], {}).get('price', 0) if order['symbol'] != 'USDT' else 1.0,
+                        'status': 'test_mode_skipped'
+                    }
+                    executed_orders.append(result)
                 else:
                     logger.warning(f"Trade validation failed for {order['symbol']}: {message}")
             

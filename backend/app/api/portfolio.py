@@ -65,9 +65,8 @@ async def get_currency_performance():
     """各通貨の騰落率を取得"""
     # 最新の価格履歴から各通貨の騰落率を計算
     symbols = [
-        "PAXG/USDT", "KAG/USDT", "SPYON/USDT", "QQQON/USDT",
-        "TSLAX/USDT", "NVDAX/USDT", "MSTRX/USDT",
-        "EURS/USDT", "GBPT/USDT", "ONDO/USDT"
+        "PAXG/USDT", "SLVON/USDT", "SPYON/USDT", "QQQON/USDT",
+        "TSLAX/USDT", "NVDAX/USDT", "MSTRX/USDT", "ONDO/USDT"
     ]
     
     performances = []

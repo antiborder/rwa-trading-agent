@@ -5,14 +5,12 @@ from typing import List
 # 取引対象資産
 TRADING_SYMBOLS: List[str] = [
     "PAXG/USDT",  # Gold
-    "KAG/USDT",   # Silver
+    "SLVON/USDT", # Silver (iShares Silver Trust Ondo Tokenized)
     "SPYON/USDT", # S&P500
     "QQQON/USDT", # NASDAQ
     "TSLAX/USDT", # Tesla
     "NVDAX/USDT", # NVIDIA
     "MSTRX/USDT", # MicroStrategy
-    "EURS/USDT",  # Euro
-    "GBPT/USDT",  # Pound
     "ONDO/USDT",  # US Treasury
 ]
 

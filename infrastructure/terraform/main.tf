@@ -478,9 +478,9 @@ resource "aws_lambda_function" "api" {
 
 # EventBridgeルール
 resource "aws_cloudwatch_event_rule" "trading_agent_schedule" {
-  name                = "${var.table_prefix}-5min-schedule"
-  description         = "RWA Trading Agent execution schedule"
-  schedule_expression = "rate(5 minutes)"
+  name                = "${var.table_prefix}-30min-schedule"
+  description         = "RWA Trading Agent execution schedule (test mode: 30 minutes)"
+  schedule_expression = "rate(30 minutes)"
 
   tags = {
     Name = "${var.table_prefix}-schedule"
