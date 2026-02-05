@@ -53,7 +53,9 @@ def calculate_trade_orders(current_allocations: Dict[str, float],
     """売買命令を計算"""
     orders = []
     
-    for symbol in TRADING_SYMBOLS + ['USDT']:
+    # NOTE: USDT is not a tradable market symbol on Gate.io (pairs are like BTC/USDT),
+    # so exclude it from trade validation/execution to avoid BadSymbol errors.
+    for symbol in TRADING_SYMBOLS:
         current_ratio = current_allocations.get(symbol, 0.0)
         target_ratio = target_allocations.get(symbol, 0.0)
         diff_ratio = target_ratio - current_ratio
@@ -65,7 +67,7 @@ def calculate_trade_orders(current_allocations: Dict[str, float],
         if diff_ratio > 0:
             # 買い注文
             order_value = total_value * diff_ratio
-            price = tickers.get(symbol, {}).get('price', 1.0) if symbol != 'USDT' else 1.0
+            price = tickers.get(symbol, {}).get('price', 1.0)
             amount = order_value / price
             orders.append({
                 'symbol': symbol,
@@ -75,7 +77,7 @@ def calculate_trade_orders(current_allocations: Dict[str, float],
         else:
             # 売り注文
             order_value = total_value * abs(diff_ratio)
-            price = tickers.get(symbol, {}).get('price', 1.0) if symbol != 'USDT' else 1.0
+            price = tickers.get(symbol, {}).get('price', 1.0)
             amount = order_value / price
             orders.append({
                 'symbol': symbol,

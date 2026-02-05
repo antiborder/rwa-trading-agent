@@ -138,6 +138,11 @@ resource "aws_dynamodb_table" "judgments" {
   }
 
   attribute {
+    name = "record_type"
+    type = "S"
+  }
+
+  attribute {
     name = "timestamp"
     type = "S"
   }
@@ -145,6 +150,14 @@ resource "aws_dynamodb_table" "judgments" {
   global_secondary_index {
     name            = "judgments_by_timestamp"
     hash_key        = "judgment_id"
+    range_key       = "timestamp"
+    projection_type = "ALL"
+  }
+
+  # 最新取得用: record_type固定 + timestamp降順でQueryできるGSI
+  global_secondary_index {
+    name            = "judgments_by_record_type_timestamp"
+    hash_key        = "record_type"
     range_key       = "timestamp"
     projection_type = "ALL"
   }
@@ -406,6 +419,7 @@ resource "aws_lambda_function" "trading_agent" {
       GATEIO_API_KEY    = var.gateio_api_key
       GATEIO_API_SECRET = var.gateio_api_secret
       GEMINI_API_KEY    = var.gemini_api_key
+      CRYPTOPANIC_AUTH_TOKEN = var.auth_token
       DYNAMODB_TABLE_PREFIX = var.table_prefix
     }
   }
@@ -468,6 +482,7 @@ resource "aws_lambda_function" "api" {
   environment {
     variables = {
       DYNAMODB_TABLE_PREFIX = var.table_prefix
+      CRYPTOPANIC_AUTH_TOKEN = var.auth_token
     }
   }
 
@@ -478,9 +493,9 @@ resource "aws_lambda_function" "api" {
 
 # EventBridgeルール
 resource "aws_cloudwatch_event_rule" "trading_agent_schedule" {
-  name                = "${var.table_prefix}-30min-schedule"
-  description         = "RWA Trading Agent execution schedule (test mode: 30 minutes)"
-  schedule_expression = "rate(30 minutes)"
+  name                = "${var.table_prefix}-10min-schedule"
+  description         = "RWA Trading Agent execution schedule (test mode: 10 minutes)"
+  schedule_expression = "rate(10 minutes)"
 
   tags = {
     Name = "${var.table_prefix}-schedule"

@@ -30,6 +30,8 @@ class DynamoDBClient:
         timestamp = datetime.utcnow().isoformat()
         
         item = {
+            # Queryで最新取得するための固定パーティションキー（GSI用）
+            'record_type': 'judgment',
             'judgment_id': judgment_id,
             'timestamp': timestamp,
             'confidence_score': confidence_score,

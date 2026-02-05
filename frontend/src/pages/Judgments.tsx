@@ -15,8 +15,12 @@ const Judgments: React.FC = () => {
     try {
       setLoading(true)
       setError(null)
-      const data = await judgmentsApi.getList(50)
-      setJudgments(data)
+      const data = await judgmentsApi.getList(20)
+      // 念のためフロント側でも新しい順に整列し、最新20件のみ表示
+      const sorted = [...data].sort(
+        (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      )
+      setJudgments(sorted.slice(0, 20))
     } catch (err) {
       setError(err instanceof Error ? err.message : 'データの取得に失敗しました')
     } finally {

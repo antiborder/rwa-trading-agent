@@ -39,6 +39,7 @@ table_prefix = "rwa_trading_agent"
 gateio_api_key = "your_actual_gateio_api_key"
 gateio_api_secret = "your_actual_gateio_api_secret"
 gemini_api_key = "your_actual_gemini_api_key"
+auth_token = "your_actual_cryptopanic_auth_token"
 ```
 
 **重要**: `terraform.tfvars`は`.gitignore`に含まれているため、Gitにコミットされません。

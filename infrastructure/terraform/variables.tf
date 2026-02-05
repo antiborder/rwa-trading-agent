@@ -27,3 +27,9 @@ variable "gemini_api_key" {
   type        = string
   sensitive   = true
 }
+
+variable "auth_token" {
+  description = "CryptoPanic auth token (News API)"
+  type        = string
+  sensitive   = true
+}

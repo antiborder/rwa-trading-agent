@@ -86,7 +86,7 @@ const Dashboard: React.FC = () => {
                       fill="#8884d8"
                       dataKey="value"
                     >
-                      {pieData.map((entry, index) => (
+                      {pieData.map((_, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
@@ -180,13 +180,13 @@ const Dashboard: React.FC = () => {
                   {cp.change_24h >= 0 ? '+' : ''}{cp.change_24h.toFixed(2)}%
                 </td>
                 <td style={{ color: (cp.change_1d || 0) >= 0 ? 'green' : 'red' }}>
-                  {cp.change_1d !== undefined ? `${cp.change_1d >= 0 ? '+' : ''}${cp.change_1d.toFixed(2)}%` : '-'}
+                  {typeof cp.change_1d === 'number' ? `${cp.change_1d >= 0 ? '+' : ''}${cp.change_1d.toFixed(2)}%` : '-'}
                 </td>
                 <td style={{ color: (cp.change_1w || 0) >= 0 ? 'green' : 'red' }}>
-                  {cp.change_1w !== undefined ? `${cp.change_1w >= 0 ? '+' : ''}${cp.change_1w.toFixed(2)}%` : '-'}
+                  {typeof cp.change_1w === 'number' ? `${cp.change_1w >= 0 ? '+' : ''}${cp.change_1w.toFixed(2)}%` : '-'}
                 </td>
                 <td style={{ color: (cp.change_1m || 0) >= 0 ? 'green' : 'red' }}>
-                  {cp.change_1m !== undefined ? `${cp.change_1m >= 0 ? '+' : ''}${cp.change_1m.toFixed(2)}%` : '-'}
+                  {typeof cp.change_1m === 'number' ? `${cp.change_1m >= 0 ? '+' : ''}${cp.change_1m.toFixed(2)}%` : '-'}
                 </td>
               </tr>
             ))}

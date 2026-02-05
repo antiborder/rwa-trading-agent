@@ -3,6 +3,7 @@ import boto3
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 from decimal import Decimal
+from boto3.dynamodb.conditions import Key
 from app.config import (
     JUDGMENTS_TABLE, TRANSACTIONS_TABLE, PORTFOLIO_SNAPSHOTS_TABLE,
     PRICE_HISTORY_TABLE, AWS_REGION
@@ -81,24 +82,41 @@ class DynamoDBService:
     def get_judgments(self, limit: int = 50, last_key: Optional[str] = None) -> Dict:
         """判断履歴一覧を取得"""
         try:
-            scan_kwargs = {
-                'Limit': limit
-            }
-            
+            # 最新取得はGSIでQuery（record_type固定 + timestamp降順 + Limit）
+            # NOTE: 既存データ（record_type未付与）が残っている間はフォールバックでscanも実施。
             if last_key:
-                scan_kwargs['ExclusiveStartKey'] = {'judgment_id': last_key}
-            
-            response = self.judgments_table.scan(**scan_kwargs)
-            
-            items = sorted(
-                response['Items'],
-                key=lambda x: x['timestamp'],
-                reverse=True
-            )
-            
+                # このプロジェクトのlast_keyはフロントで未使用。互換のためscanベースのページングは温存しない。
+                pass
+
+            try:
+                response = self.judgments_table.query(
+                    IndexName="judgments_by_record_type_timestamp",
+                    KeyConditionExpression=Key("record_type").eq("judgment"),
+                    ScanIndexForward=False,
+                    Limit=limit,
+                )
+                items = response.get("Items", [])
+            except Exception:
+                items = []
+
+            if len(items) < limit:
+                # フォールバック: scanしてtimestamp降順から補完（テーブルが小さい間の暫定）
+                scan_items: List[Dict] = []
+                scan_kwargs: Dict = {}
+                while True:
+                    scan_resp = self.judgments_table.scan(**scan_kwargs)
+                    scan_items.extend(scan_resp.get("Items", []))
+                    lek = scan_resp.get("LastEvaluatedKey")
+                    if not lek:
+                        break
+                    scan_kwargs["ExclusiveStartKey"] = lek
+
+                scan_items_sorted = sorted(scan_items, key=lambda x: x["timestamp"], reverse=True)
+                items = scan_items_sorted[:limit]
+
             return {
-                'items': [self._decimal_to_float(item) for item in items],
-                'last_evaluated_key': response.get('LastEvaluatedKey')
+                "items": [self._decimal_to_float(item) for item in items],
+                "last_evaluated_key": None,
             }
         except Exception as e:
             print(f"Error getting judgments: {str(e)}")
